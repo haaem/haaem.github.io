@@ -7,6 +7,10 @@ let shader;   // shader program
 let vao;      // vertex array object
 let locX = 0.0;
 let locY = 0.0;
+let arrowUp = false;
+let arrowDown = false;
+let arrowLeft = false;
+let arrowRight = false;
 
 function initWebGL() {
     if (!gl) {
@@ -37,26 +41,33 @@ function setupKeyboardEvents() {
     window.addEventListener('keydown', (event) => {
         // 아래 if condition을 if (event.key in keys)로 간단히 할 수도 있음
         if (event.key === 'ArrowUp' || event.key === 'ArrowDown' ||
-        event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
             if (event.key === 'ArrowUp') {
-                if (locY <= 0.9) {
-                    locY += 0.01;
-                }
+                arrowUp = true;
             }
             else if (event.key === 'ArrowDown') {
-                if (locY >= -0.9) {
-                    locY -= 0.01;
-                }
+                arrowDown = true;
             }
             else if (event.key === 'ArrowLeft') {
-                if (locX >= -0.9) {
-                    locX -= 0.01;
-                }
+                arrowLeft = true;
             }
             else if (event.key === 'ArrowRight') {
-                if (locX <= 0.9) {
-                    locX += 0.01;
-                }
+                arrowRight = true;
+            }
+        }
+    });
+
+    window.addEventListener('keyup', (event) => {
+        if (event.key === 'ArrowUp' || event.key === 'ArrowDown' ||
+            event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+            if (event.key === 'ArrowUp') {
+                arrowUp = false;
+            } else if (event.key === 'ArrowDown') {
+                arrowDown = false;
+            } else if (event.key === 'ArrowLeft') {
+                arrowLeft = false;
+            } else if (event.key === 'ArrowRight') {
+                arrowRight = false;
             }
         }
     });
@@ -82,6 +93,16 @@ function setupBuffers() {
 
 function render() {
     gl.clear(gl.COLOR_BUFFER_BIT);
+
+    if (arrowUp && locY <= 0.9) {
+        locY += 0.01;
+    } else if (arrowDown && locY >= -0.9) {
+        locY -= 0.01;
+    } else if (arrowLeft && locX >= -0.9) {
+        locX -= 0.01;
+    } else if (arrowRight && locX <= 0.9) {
+        locX += 0.01;
+    }
 
     shader.setFloat("locX", locX);
     shader.setFloat("locY", locY);
